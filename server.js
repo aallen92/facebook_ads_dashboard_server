@@ -9,6 +9,9 @@ const {
   logErrorMiddleware,
 } = require("./src/middlewares/error.middleware");
 
+// Router Imports
+const authRouter = require("./src/routes/auth.route");
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(
@@ -18,7 +21,9 @@ app.use(
 );
 
 db.sequelize
-  .sync()
+  .sync({
+    alter: true,
+  })
   .then(() => {
     console.log("Synced DB");
   })
@@ -29,6 +34,9 @@ db.sequelize
 app.get("/", (req, res) => {
   res.send("Hello from server!");
 });
+
+// Routes
+app.use("/auth", authRouter);
 
 // Error Handling should be last middlewate
 app.use(logErrorMiddleware);
